@@ -16,19 +16,27 @@ export class AppComponent {
   outA = 0;
 
   metaTx: any;
+  orders: any;
 
   data: any[] = [];
 
   constructor() {
-    this.gun = Gun(['https://my-gun-db-test.herokuapp.com/gun', 'https://mvp-gun.herokuapp.com/gun', 'https://e2eec.herokuapp.com/gun']);
-    this.metaTx = this.gun.get('metaTx');
-    this.metaTx.on((entry: any) => {
-      this.data.push({ ...entry });
-    });
+
+    this.gun = Gun(['https://my-gun-db-test.herokuapp.com/gun', 'https://mvp-gun.herokuapp.com/gun']);
+
+    this.metaTx = this.gun.get('metaTx1');
+
+    this.metaTx.map().on((tx: any, id: any) => {
+      if (tx) {
+        console.log(tx, id)
+        this.data.push(tx);
+      }
+    })
+
   }
 
   addOrder(): void {
-    this.metaTx.put({
+    this.metaTx.set({
       inToken: this.inT,
       outToken: this.outT,
       inAmount: this.inA,
